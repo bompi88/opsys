@@ -1,3 +1,5 @@
+package P2;
+
 import java.util.LinkedList;
 
 /**
@@ -28,21 +30,19 @@ public class CustomerQueue extends LinkedList<Customer> {
      */
     @Override
     public synchronized boolean add(Customer customer) {
-        boolean success = super.add(customer);
-        boolean added = true;
-
-        // Remove the last customer if full
-        while (success && size() > this.queueLength) {
-            super.remove();
-            added = false;
-        }
-
-        // only fill the chair if customer got accepted
-        if (added) {
-            gui.fillLoungeChair(this.currentPosition, customer);
-
-            this.currentPosition = incrementPosition(this.currentPosition);
-        }
+    	while(size() == queueLength){
+    		try{
+    			wait();
+    		} catch(InterruptedException e) {
+    			gui.println("Doorman failed waiting.");
+    		}
+    		
+    	}
+    	
+        boolean added = super.add(customer);
+        gui.fillLoungeChair(this.currentPosition, customer);
+        this.currentPosition = incrementPosition(this.currentPosition);
+        notifyAll();
 
         return added;
     }
@@ -53,18 +53,21 @@ public class CustomerQueue extends LinkedList<Customer> {
      */
     @Override
     public synchronized Customer pop() {
+    	while(size() == 0){
+    		try{
+    			wait();
+//    			gui.println("Barber waiting for new costumer.");
+    		} catch(InterruptedException e){
+    			gui.println("Barber failed waiting,");
+    		}
+    	}
 
-        // Return a customer if any in the queue
-        if (super.size() > 0) {
-            Customer customer = super.pop();
-
-            gui.emptyLoungeChair(this.lastRemoved);
-
-            this.lastRemoved = incrementPosition(this.lastRemoved);
-            return customer;
-        }
-
-        return null;
+        Customer customer = super.pop();
+        gui.emptyLoungeChair(this.lastRemoved);
+        this.lastRemoved = incrementPosition(this.lastRemoved);
+        notifyAll();
+        
+        return customer;
     }
 
     /**
