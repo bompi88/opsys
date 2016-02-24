@@ -1,5 +1,3 @@
-package P2;
-
 import java.util.LinkedList;
 
 /**
@@ -30,19 +28,23 @@ public class CustomerQueue extends LinkedList<Customer> {
      */
     @Override
     public synchronized boolean add(Customer customer) {
-    	while(size() == queueLength){
-    		try{
-    			wait();
-    		} catch(InterruptedException e) {
-    			gui.println("Doorman failed waiting.");
-    		}
-    		
-    	}
-    	
+        if (size() == queueLength) {
+            gui.println("Doorman waits for vacant chair.");
+        }
+
+        while(size() == queueLength){
+            try {
+                wait();
+            } catch(InterruptedException e) {
+                gui.println("Doorman failed waiting.");
+            }
+
+        }
+
         boolean added = super.add(customer);
         gui.fillLoungeChair(this.currentPosition, customer);
         this.currentPosition = incrementPosition(this.currentPosition);
-        notifyAll();
+        notify();
 
         return added;
     }
@@ -51,22 +53,26 @@ public class CustomerQueue extends LinkedList<Customer> {
      * Pops a customer off the queue.
      * @return
      */
-    @Override
-    public synchronized Customer pop() {
-    	while(size() == 0){
-    		try{
-    			wait();
-//    			gui.println("Barber waiting for new costumer.");
-    		} catch(InterruptedException e){
-    			gui.println("Barber failed waiting,");
-    		}
-    	}
+    public synchronized Customer pop(int barber) {
+
+        if (size() == 0) {
+            gui.println("Barber #" + barber + " is waiting for a new customer.");
+        }
+
+        while(size() == 0){
+            try {
+
+                wait();
+            } catch(InterruptedException e){
+                gui.println("Barber failed waiting.");
+            }
+        }
 
         Customer customer = super.pop();
         gui.emptyLoungeChair(this.lastRemoved);
         this.lastRemoved = incrementPosition(this.lastRemoved);
-        notifyAll();
-        
+        notify();
+
         return customer;
     }
 
