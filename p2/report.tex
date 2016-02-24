@@ -1,0 +1,23 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\title{Rapport P2 \\ TDT4186}
+\author{Au-Dung Vuong, Martin Brandtzæg Sundfør, Bjørn Bråthen}
+
+\maketitle
+
+\section*{Arving av Thread}
+
+Doorman og Barber instansene arver fra Thread-klassen, og implementerer run-metoden som kjøres når trådene startes.
+Arbeidet som gjøres av trådene blir satt i gang fra denne run-metoden. startThread og stopThread sørger for å starte og stoppe tråden.
+
+\section*{Synkronisering og Sirkulært buffer}
+
+Vi har valgt å bruke en lenket-liste som vår sirkulære buffer. Doorman legger til Customer i listen og oppdaterer pekeren på neste ledige stol. Når en Barber-instans henter en kunde, fjerner han den fra listen og oppdaterer pekeren til neste stol i rekken.
+
+Metodene som redigerer den sirkulære bufferen er alle synkroniserte, sånn at bare en tråd har tilgang til en hver tid. Hvis Bufferen er tom, venter en eller flere av Barber-instansene på at bufferen fylles opp. Deretter sier den i fra at metoden er ledig ved bruk av notify-metoden. Det tilsvarende skjer med Doorman når bufferen er full; Han venter på at en barberer skal hente en kunde fra køen.
+
+\end{document}
