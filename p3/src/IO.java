@@ -18,8 +18,13 @@ public class IO {
     }
 
     public long process() {
-        // TODO: implement this
-        return 0;
+        return avgIoTime;
+    }
+
+    public long endProcess() {
+        Process process = ioQueue.removeNext();
+        cpu.insert(process);
+        return avgIoTime;
     }
 
     public boolean hasNext() {

@@ -157,12 +157,8 @@ public class Simulator implements Constants
 		// As long as there is enough memory, processes are moved from the memory queue to the cpu queue
 		while(p != null) {
 
-			// TODO: Add this process to the CPU queue!
 			// Also add new events to the event queue if needed
-
-			// Since we haven't implemented the CPU and I/O device yet,
-			// we let the process leave the system immediately, for now.
-			memory.processCompleted(p);
+            cpu.insert(p);
 
             // Try to use the freed memory:
 			flushMemoryQueue();
@@ -173,13 +169,18 @@ public class Simulator implements Constants
 			// Check for more free memory
 			p = memory.checkMemory(clock);
 		}
+
+        if(cpu.hasNext()) {
+            eventQueue.insertEvent(new Event(SWITCH_PROCESS, clock + cpu.getMaxTime()));
+        }
 	}
 
 	/**
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
-        // TODO: implement this
+        Event event = cpu.process();
+        eventQueue.insertEvent(event);
 	}
 
 	/**
@@ -194,7 +195,9 @@ public class Simulator implements Constants
 	 * perform an I/O operation.
 	 */
 	private void processIoRequest() {
-        // TODO: implement this
+        long processingTime = io.process();
+        long timeProcessed = clock + processingTime;
+        eventQueue.insertEvent(new Event(END_IO, timeProcessed));
 	}
 
 	/**
@@ -202,7 +205,13 @@ public class Simulator implements Constants
 	 * is done with its I/O operation.
 	 */
 	private void endIoOperation() {
-        // TODO: implement this
+        long processingTime = io.endProcess();
+        long timeProcessed = clock + processingTime;
+
+        // Add next IO process if any
+        if(io.hasNext()) {
+            eventQueue.insertEvent(new Event(IO_REQUEST, timeProcessed));
+        }
 	}
 
 	/**
@@ -250,7 +259,7 @@ public class Simulator implements Constants
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println("Want to use default values?");
+        System.out.println("Want to use default values (y/n)?");
         boolean useDefaultValues = determineYesOrNo(reader);
 
         if (!useDefaultValues) {

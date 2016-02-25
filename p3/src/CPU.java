@@ -18,13 +18,16 @@ public class CPU {
         cpuQueue.insert(process);
     }
 
-    public long process() {
+    public Event process() {
         // TODO: implement this
-        return 0;
+        Process process = cpuQueue.getNext();
+
+        return new Event(Constants.END_PROCESS, 10);
     }
 
     public void endProcess() {
-        // TODO: implement this
+        Process process = cpuQueue.removeNext();
+        memory.processCompleted(process);
     }
 
     public boolean hasNext() {
@@ -33,5 +36,9 @@ public class CPU {
 
     public void connectIo(IO io) {
         this.io = io;
+    }
+
+    public long getMaxTime() {
+        return this.maxCpuTime;
     }
 }

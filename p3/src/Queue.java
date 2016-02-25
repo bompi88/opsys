@@ -9,7 +9,7 @@ import java.awt.*;
  */
 public class Queue extends JPanel implements Constants {
 	/** The content of the queue */
-	private ArrayList<Object> content;
+	private ArrayList<Process> content;
 
 	/** The name of the queue */
 	private String name;
@@ -41,7 +41,7 @@ public class Queue extends JPanel implements Constants {
 	 * Inserts a new element to the tail of the queue.
 	 * @param o	The object to be added to the queue.
 	 */
-	public void insert(Object o) {
+	public void insert(Process o) {
 		content.add(o);
 		repaint();
 	}
@@ -50,7 +50,7 @@ public class Queue extends JPanel implements Constants {
 	 * Returns the first element in the queue, but does not remove it from the queue.
 	 * @return	The first object in the queue.
 	 */
-	public Object getNext() {
+	public Process getNext() {
 		return content.get(0);
 	}
 
@@ -58,8 +58,8 @@ public class Queue extends JPanel implements Constants {
 	 * Returns the first element in the queue, and removes it from the queue.
 	 * @return	The object that was the first one in the queue.
 	 */
-	public Object removeNext() {
-		Object result = content.remove(0);
+	public Process removeNext() {
+		Process result = content.remove(0);
 		repaint();
 		return result;
 	}
@@ -98,7 +98,7 @@ public class Queue extends JPanel implements Constants {
 				g.drawString(heading, w / 2 - fm.stringWidth(heading) / 2, 15);
 				for(int i = 0; i < maxVisibleLength; i++) {
 					if(i < content.size()) {
-						Process p = (Process)content.get(i);
+						Process p = content.get(i);
 						p.draw(g, w - (i + 1) * w / (maxVisibleLength + 1), 20, w / (maxVisibleLength + 1), h - 20);
 					}
 					else {
@@ -116,7 +116,7 @@ public class Queue extends JPanel implements Constants {
 				g.drawString(heading, w / 2 - fm.stringWidth(heading) / 2, 15);
 				for(int i = 0; i < maxVisibleLength; i++) {
 					if(i < content.size()) {
-						Process p = (Process)content.get(i);
+						Process p = content.get(i);
 						p.draw(g, i * w / (maxVisibleLength + 1), 20, w / (maxVisibleLength + 1), h - 20);
 					}
 					else {

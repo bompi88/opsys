@@ -20,6 +20,9 @@ public class Statistics
     /** Total CPU time spent processing */
     public long totalCpuTimeProcessing = 0;
 
+    /** Total time spent in IO */
+    public long totalIOTimeProcessing = 0;
+
     /** Total CPU time spent waiting */
     public long totalCpuTimeWaiting = 0;
 
@@ -107,7 +110,7 @@ public class Statistics
             System.out.println("Average time spent waiting for I/O per process: " +
                     totalTimeSpentWaitingForIo / simulationLength + " ms");
             System.out.println("Average time spent in I/O per process: " +
-                    totalTimeSpentWaitingForMemory / simulationLength + " ms");
+                    totalIOTimeProcessing / simulationLength + " ms");
 		}
 	}
 }
