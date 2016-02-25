@@ -12,4 +12,17 @@ public class IO {
         this.statistics = statistics;
         this.avgIoTime = avgIoTime;
     }
+
+    public void insert(Process process) {
+        ioQueue.insert(process);
+    }
+
+    public long process() {
+        // TODO: implement this
+        return 0;
+    }
+
+    public boolean hasNext() {
+        return !ioQueue.isEmpty();
+    }
 }

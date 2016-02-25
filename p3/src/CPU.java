@@ -14,6 +14,23 @@ public class CPU {
         this.maxCpuTime = maxCpuTime;
     }
 
+    public void insert(Process process) {
+        cpuQueue.insert(process);
+    }
+
+    public long process() {
+        // TODO: implement this
+        return 0;
+    }
+
+    public void endProcess() {
+        // TODO: implement this
+    }
+
+    public boolean hasNext() {
+        return !cpuQueue.isEmpty();
+    }
+
     public void connectIo(IO io) {
         this.io = io;
     }

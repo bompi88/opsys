@@ -179,14 +179,14 @@ public class Simulator implements Constants
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
-		// Incomplete
+        // TODO: implement this
 	}
 
 	/**
 	 * Ends the active process, and deallocates any resources allocated to it.
 	 */
 	private void endProcess() {
-		// Incomplete
+		cpu.endProcess();
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class Simulator implements Constants
 	 * perform an I/O operation.
 	 */
 	private void processIoRequest() {
-		// Incomplete
+        // TODO: implement this
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class Simulator implements Constants
 	 * is done with its I/O operation.
 	 */
 	private void endIoOperation() {
-		// Incomplete
+        // TODO: implement this
 	}
 
 	/**
@@ -220,6 +220,20 @@ public class Simulator implements Constants
 		}
 	}
 
+    /**
+     * Checks for yes or no from inpu.
+     * @param reader	The input reader from which to read a number.
+     * @return			Either true or false, true=yes, false=no.
+     */
+    public static boolean determineYesOrNo(BufferedReader reader) {
+        try {
+            String input = reader.readLine().toLowerCase();
+            return (input.equals("y") || input.equals("yes"));
+        } catch (IOException ioe) {
+            return false;
+        }
+    }
+
 	/**
 	 * The startup method. Reads relevant parameters from the standard input,
 	 * and starts up the GUI. The GUI will then start the simulation when
@@ -227,33 +241,46 @@ public class Simulator implements Constants
 	 * @param args	Parameters from the command line, they are ignored.
 	 */
 	public static void main(String args[]) {
+
+        long memorySize = 2048;
+        long maxCpuTime = 500;
+        long avgIoTime = 225;
+        long simulationLength = 250000;
+        long avgArrivalInterval = 5000;
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Please input system parameters: ");
 
-		System.out.print("Memory size (KB): ");
-		long memorySize = readLong(reader);
+        System.out.println("Want to use default values?");
+        boolean useDefaultValues = determineYesOrNo(reader);
 
-        while(memorySize < 400) {
-			System.out.println("Memory size must be at least 400 KB. Specify memory size (KB): ");
-			memorySize = readLong(reader);
-		}
+        if (!useDefaultValues) {
+            System.out.println("Please input system parameters: ");
 
-		System.out.print("Maximum uninterrupted cpu time for a process (ms): ");
-		long maxCpuTime = readLong(reader);
+            System.out.print("Memory size (KB): ");
+            memorySize = readLong(reader);
 
-		System.out.print("Average I/O operation time (ms): ");
-		long avgIoTime = readLong(reader);
+            while (memorySize < 400) {
+                System.out.println("Memory size must be at least 400 KB. Specify memory size (KB): ");
+                memorySize = readLong(reader);
+            }
 
-		System.out.print("Simulation length (ms): ");
-		long simulationLength = readLong(reader);
+            System.out.print("Maximum uninterrupted cpu time for a process (ms): ");
+            maxCpuTime = readLong(reader);
 
-        while(simulationLength < 1) {
-			System.out.println("Simulation length must be at least 1 ms. Specify simulation length (ms): ");
-			simulationLength = readLong(reader);
-		}
+            System.out.print("Average I/O operation time (ms): ");
+            avgIoTime = readLong(reader);
 
-		System.out.print("Average time between process arrivals (ms): ");
-		long avgArrivalInterval = readLong(reader);
+            System.out.print("Simulation length (ms): ");
+            simulationLength = readLong(reader);
+
+            while (simulationLength < 1) {
+                System.out.println("Simulation length must be at least 1 ms. Specify simulation length (ms): ");
+                simulationLength = readLong(reader);
+            }
+
+            System.out.print("Average time between process arrivals (ms): ");
+            avgArrivalInterval = readLong(reader);
+        }
 
 		SimulationGui gui = new SimulationGui(memorySize, maxCpuTime, avgIoTime, simulationLength, avgArrivalInterval);
 	}
