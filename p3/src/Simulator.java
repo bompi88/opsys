@@ -11,7 +11,13 @@ public class Simulator implements Constants
 	/** Reference to the memory unit */
 	private Memory memory;
 
-	/** Reference to the GUI interface */
+    /** Reference to the cpu unit */
+    private CPU cpu;
+
+    /** Reference to the io unit */
+    private IO io;
+
+    /** Reference to the GUI interface */
 	private Gui gui;
 
 	/** Reference to the statistics collector */
@@ -25,7 +31,6 @@ public class Simulator implements Constants
 
 	/** The average length between process arrivals */
 	private long avgArrivalInterval;
-	// Add member variables as needed
 
 	/**
 	 * Constructs a scheduling simulator with the given parameters.
@@ -44,11 +49,16 @@ public class Simulator implements Constants
 		this.simulationLength = simulationLength;
 		this.avgArrivalInterval = avgArrivalInterval;
 		this.gui = gui;
-		statistics = new Statistics();
-		eventQueue = new EventQueue();
-		memory = new Memory(memoryQueue, memorySize, statistics);
+		this.statistics = new Statistics();
+		this.eventQueue = new EventQueue();
+
+        this.memory = new Memory(memoryQueue, memorySize, statistics);
+        this.cpu = new CPU(cpuQueue, maxCpuTime, statistics, memory);
+        this.io = new IO(ioQueue, avgIoTime, statistics, cpu);
+
+        cpu.connectIo(io);
+
 		clock = 0;
-		// Add code as needed
 	}
 
 	/**
