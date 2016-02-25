@@ -10,13 +10,13 @@ import java.util.*;
 public class EventQueue
 {
 	/** The list of events */
-	private ArrayList events;
+	private ArrayList<Event> events;
 
 	/**
 	 * Creates a new Event Queue.
 	 */
 	public EventQueue() {
-		events = new ArrayList();
+		events = new ArrayList<>();
 	}
 
 	/**
@@ -25,27 +25,27 @@ public class EventQueue
 	 * is then resorted.
 	 * @param event	The event to be inserted.
 	 */
-    public void insertEvent(Event event) {
+	public void insertEvent(Event event) {
 		if(event != null) {
 			events.add(event);
 			Collections.sort(events);
 		}
-    }
+	}
 
 	/**
 	 * Removes and returns the earliest event (the event
 	 * with the lowest time value) from the queue.
 	 * @return	The event with the lowest time value in the queue.
 	 */
-    public Event getNextEvent() {
-		  return (Event)events.remove(0);
-    }
+	public Event getNextEvent() {
+		return events.remove(0);
+	}
 
-    /**
-     * Checks whether or not the event queue is empty.
-     * @return	Whether or not the event queue is empty.
-     */
-    public boolean isEmpty() {
+	/**
+	 * Checks whether or not the event queue is empty.
+	 * @return	Whether or not the event queue is empty.
+	 */
+	public boolean isEmpty() {
 		return events.size() == 0;
 	}
 }

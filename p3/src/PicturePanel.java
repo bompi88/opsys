@@ -73,10 +73,15 @@ public class PicturePanel extends JPanel implements Constants {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
-		if(orientation > 0)
-			g2D.rotate(Math.PI*orientation/2.0, imageWidth/2.0, imageHeight/2.0);
-		g.drawImage(image,0,0,imageWidth,imageHeight,this);
-		if(topImage != null)
+
+		if(orientation > 0) {
+			g2D.rotate(Math.PI * orientation / 2.0, imageWidth / 2.0, imageHeight / 2.0);
+        }
+
+        g.drawImage(image, 0, 0, imageWidth, imageHeight,this);
+
+		if(topImage != null) {
 			g2D.drawImage(topImage,0,0,imageWidth,imageHeight,this);
+        }
 	}
 }

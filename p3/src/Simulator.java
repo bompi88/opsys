@@ -6,17 +6,23 @@ import java.io.*;
 public class Simulator implements Constants
 {
 	/** The queue of events to come */
-    private EventQueue eventQueue;
+	private EventQueue eventQueue;
+
 	/** Reference to the memory unit */
-    private Memory memory;
+	private Memory memory;
+
 	/** Reference to the GUI interface */
 	private Gui gui;
+
 	/** Reference to the statistics collector */
 	private Statistics statistics;
+
 	/** The global clock */
-    private long clock;
+	private long clock;
+
 	/** The length of the simulation */
 	private long simulationLength;
+
 	/** The average length between process arrivals */
 	private long avgArrivalInterval;
 	// Add member variables as needed
@@ -34,7 +40,7 @@ public class Simulator implements Constants
 	 * @param gui					Reference to the GUI interface.
 	 */
 	public Simulator(Queue memoryQueue, Queue cpuQueue, Queue ioQueue, long memorySize,
-			long maxCpuTime, long avgIoTime, long simulationLength, long avgArrivalInterval, Gui gui) {
+					 long maxCpuTime, long avgIoTime, long simulationLength, long avgArrivalInterval, Gui gui) {
 		this.simulationLength = simulationLength;
 		this.avgArrivalInterval = avgArrivalInterval;
 		this.gui = gui;
@@ -43,9 +49,9 @@ public class Simulator implements Constants
 		memory = new Memory(memoryQueue, memorySize, statistics);
 		clock = 0;
 		// Add code as needed
-    }
+	}
 
-    /**
+	/**
 	 * Starts the simulation. Contains the main loop, processing events.
 	 * This method is called when the "Start simulation" button in the
 	 * GUI is clicked.
@@ -54,20 +60,26 @@ public class Simulator implements Constants
 		// TODO: You may want to extend this method somewhat.
 
 		System.out.print("Simulating...");
+
 		// Genererate the first process arrival event
 		eventQueue.insertEvent(new Event(NEW_PROCESS, 0));
-		// Process events until the simulation length is exceeded:
+
+        // Process events until the simulation length is exceeded:
 		while (clock < simulationLength && !eventQueue.isEmpty()) {
 			// Find the next event
 			Event event = eventQueue.getNextEvent();
-			// Find out how much time that passed...
+
+            // Find out how much time that passed...
 			long timeDifference = event.getTime()-clock;
-			// ...and update the clock.
+
+            // ...and update the clock.
 			clock = event.getTime();
-			// Let the memory unit and the GUI know that time has passed
+
+            // Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
 			gui.timePassed(timeDifference);
-			// Deal with the event
+
+            // Deal with the event
 			if (clock < simulationLength) {
 				processEvent(event);
 			}
@@ -76,8 +88,10 @@ public class Simulator implements Constants
 			// events being added to the event queue!
 
 		}
+
 		System.out.println("..done.");
-		// End the simulation by printing out the required statistics
+
+        // End the simulation by printing out the required statistics
 		statistics.printReport(simulationLength);
 	}
 
@@ -114,12 +128,14 @@ public class Simulator implements Constants
 		Process newProcess = new Process(memory.getMemorySize(), clock);
 		memory.insertProcess(newProcess);
 		flushMemoryQueue();
-		// Add an event for the next process arrival
-		long nextArrivalTime = clock + 1 + (long)(2*Math.random()*avgArrivalInterval);
+
+        // Add an event for the next process arrival
+		long nextArrivalTime = clock + 1 + (long)(2 * Math.random() * avgArrivalInterval);
 		eventQueue.insertEvent(new Event(NEW_PROCESS, nextArrivalTime));
-		// Update statistics
+
+        // Update statistics
 		statistics.nofCreatedProcesses++;
-    }
+	}
 
 	/**
 	 * Transfers processes from the memory queue to the ready queue as long as there is enough
@@ -127,18 +143,21 @@ public class Simulator implements Constants
 	 */
 	private void flushMemoryQueue() {
 		Process p = memory.checkMemory(clock);
+
 		// As long as there is enough memory, processes are moved from the memory queue to the cpu queue
 		while(p != null) {
-			
+
 			// TODO: Add this process to the CPU queue!
 			// Also add new events to the event queue if needed
 
 			// Since we haven't implemented the CPU and I/O device yet,
 			// we let the process leave the system immediately, for now.
 			memory.processCompleted(p);
-			// Try to use the freed memory:
+
+            // Try to use the freed memory:
 			flushMemoryQueue();
-			// Update statistics
+
+            // Update statistics
 			p.updateStatistics(statistics);
 
 			// Check for more free memory
@@ -203,7 +222,8 @@ public class Simulator implements Constants
 
 		System.out.print("Memory size (KB): ");
 		long memorySize = readLong(reader);
-		while(memorySize < 400) {
+
+        while(memorySize < 400) {
 			System.out.println("Memory size must be at least 400 KB. Specify memory size (KB): ");
 			memorySize = readLong(reader);
 		}
@@ -216,7 +236,8 @@ public class Simulator implements Constants
 
 		System.out.print("Simulation length (ms): ");
 		long simulationLength = readLong(reader);
-		while(simulationLength < 1) {
+
+        while(simulationLength < 1) {
 			System.out.println("Simulation length must be at least 1 ms. Specify simulation length (ms): ");
 			simulationLength = readLong(reader);
 		}

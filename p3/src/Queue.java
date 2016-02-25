@@ -9,13 +9,17 @@ import java.awt.*;
  */
 public class Queue extends JPanel implements Constants {
 	/** The content of the queue */
-	private ArrayList content;
+	private ArrayList<Object> content;
+
 	/** The name of the queue */
 	private String name;
+
 	/** The maximum number of elements of the queue that will be visible in the GUI */
 	private int maxVisibleLength;
+
 	/** The direction in which the queue is drawn, either EAST or WEST */
 	private int direction;
+
 	/** The font used by all queues */
 	private static Font font = new Font("Arial", Font.PLAIN, 12);
 
@@ -29,7 +33,7 @@ public class Queue extends JPanel implements Constants {
 		this.name = name;
 		this.maxVisibleLength = maxVisibleLength;
 		this.direction = direction;
-		content = new ArrayList();
+		content = new ArrayList<>();
 		setBackground(Color.white);
 	}
 
@@ -83,48 +87,48 @@ public class Queue extends JPanel implements Constants {
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		int w = getWidth()-1;
-		int h = getHeight()-1;
+		int w = getWidth() - 1;
+		int h = getHeight() - 1;
 		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics(font);
-		String heading = "Items in "+name+": "+content.size();
+		String heading = "Items in " + name + ": " + content.size();
 		switch(direction) {
-		case EAST:
-			g.setColor(Color.black);
-			g.drawString(heading, w/2-fm.stringWidth(heading)/2, 15);
-			for(int i = 0; i < maxVisibleLength; i++) {
-				if(i < content.size()) {
-					Process p = (Process)content.get(i);
-					p.draw(g, w-(i+1)*w/(maxVisibleLength+1), 20, w/(maxVisibleLength+1), h-20);
+			case EAST:
+				g.setColor(Color.black);
+				g.drawString(heading, w / 2 - fm.stringWidth(heading) / 2, 15);
+				for(int i = 0; i < maxVisibleLength; i++) {
+					if(i < content.size()) {
+						Process p = (Process)content.get(i);
+						p.draw(g, w - (i + 1) * w / (maxVisibleLength + 1), 20, w / (maxVisibleLength + 1), h - 20);
+					}
+					else {
+						g.setColor(Color.black);
+						g.drawRect(w - (i + 1) * w / (maxVisibleLength + 1), 20, w / (maxVisibleLength + 1), h - 20);
+					}
 				}
-				else {
-					g.setColor(Color.black);
-					g.drawRect(w-(i+1)*w/(maxVisibleLength+1), 20, w/(maxVisibleLength+1), h-20);
+				g.setColor(Color.red);
+				g.drawLine(0, 20, w, 20);
+				g.drawLine(w, 20, w, h);
+				g.drawLine(0, h, w, h);
+				break;
+			case WEST:
+				g.setColor(Color.black);
+				g.drawString(heading, w / 2 - fm.stringWidth(heading) / 2, 15);
+				for(int i = 0; i < maxVisibleLength; i++) {
+					if(i < content.size()) {
+						Process p = (Process)content.get(i);
+						p.draw(g, i * w / (maxVisibleLength + 1), 20, w / (maxVisibleLength + 1), h - 20);
+					}
+					else {
+						g.setColor(Color.black);
+						g.drawRect(i * w / (maxVisibleLength + 1), 20, w / (maxVisibleLength + 1), h - 20);
+					}
 				}
-			}
-			g.setColor(Color.red);
-			g.drawLine(0,20,w,20);
-			g.drawLine(w,20,w,h);
-			g.drawLine(0,h,w,h);
-			break;
-		case WEST:
-			g.setColor(Color.black);
-			g.drawString(heading, w/2-fm.stringWidth(heading)/2, 15);
-			for(int i = 0; i < maxVisibleLength; i++) {
-				if(i < content.size()) {
-					Process p = (Process)content.get(i);
-					p.draw(g, i*w/(maxVisibleLength+1), 20, w/(maxVisibleLength+1), h-20);
-				}
-				else {
-					g.setColor(Color.black);
-					g.drawRect(i*w/(maxVisibleLength+1), 20, w/(maxVisibleLength+1), h-20);
-				}
-			}
-			g.setColor(Color.red);
-			g.drawLine(0,20,w,20);
-			g.drawLine(0,20,0,h);
-			g.drawLine(0,h,w,h);
-			break;
+				g.setColor(Color.red);
+				g.drawLine(0, 20, w, 20);
+				g.drawLine(0, 20, 0, h);
+				g.drawLine(0, h, w, h);
+				break;
 		}
 	}
 }

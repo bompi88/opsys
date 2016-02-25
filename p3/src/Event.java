@@ -4,10 +4,11 @@
  * @see EventQueue
  * @see Constants
  */
-public class Event implements Comparable
+public class Event implements Comparable<Event>
 {
 	/** The sort of event */
 	private int type;
+
 	/** The time at which the event will occur */
 	private long time;
 
@@ -40,14 +41,13 @@ public class Event implements Comparable
 	/**
 	 * Compares the time of two events. This method is used when sorting
 	 * the list of events maintained by the EventQueue class.
-	 * @param o	The event to compare this event with.
+	 * @param e	The event to compare this event with.
 	 * @return	A negative number if this event occurs before the other event,
 	 *			0 if they occur at the same time, and a positive number if the other
 	 *			event occurs before this event.
 	 * @see	java.lang.Comparable
 	 */
-	public int compareTo(Object o) {
-		Event e = (Event)o;
-		return (int)(time-e.time);
+	public int compareTo(Event e) {
+		return (int)(time - e.time);
 	}
 }
