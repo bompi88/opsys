@@ -19,8 +19,6 @@ public class CPU {
     }
 
     public Event process() {
-
-
         // TODO: implement this
         Process process = cpuQueue.getNext();
 
@@ -41,15 +39,21 @@ public class CPU {
     }
 
 
-//    public Event switchProcess(long clock){
-//    	if( activeProcess != null){
-//    		if(!cpuQueue.isEmpty()){
-//    			
-//    		}
-//    	}else{
-//    		
-//    	}
-//    }
+    public Event switchProcess(long clock){
+    	Process activeProcess = cpuQueue.getNext();
+    	if(activeProcess != null){
+    		if(hasNext()){
+    			cpuQueue.insert(activeProcess);
+    			cpuQueue.insert(cpuQueue.getNext());
+    			statistics.nofProcessedIoOperations++;
+    		}
+    	}else{
+    		if(hasNext()){
+    			cpuQueue.insert(cpuQueue.getNext());
+    		}
+    	}
+    	return null; 
+    }
     
     public long getMaxTime() {
         return this.maxCpuTime;
