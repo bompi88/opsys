@@ -85,6 +85,7 @@ public class Simulator implements Constants
             // ...and update the clock.
 			clock = event.getTime();
 
+			System.out.println(eventQueue);
             // Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
 			gui.timePassed(timeDifference);

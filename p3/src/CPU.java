@@ -19,6 +19,8 @@ public class CPU {
     }
 
     public Event process() {
+
+
         // TODO: implement this
         Process process = cpuQueue.getNext();
 

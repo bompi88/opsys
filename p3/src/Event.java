@@ -50,4 +50,28 @@ public class Event implements Comparable<Event>
 	public int compareTo(Event e) {
 		return (int)(time - e.time);
 	}
+
+	public String toString() {
+		String typeStr = null;
+
+		switch(type) {
+			case Constants.NEW_PROCESS:
+				typeStr = "NEW_PROCESS";
+                break;
+			case Constants.END_PROCESS:
+				typeStr = "END_PROCESS";
+                break;
+            case Constants.SWITCH_PROCESS:
+				typeStr = "SWITCH_PROCESS";
+                break;
+            case Constants.IO_REQUEST:
+				typeStr = "IO_REQUEST";
+                break;
+            case Constants.END_IO:
+				typeStr = "END_IO";
+                break;
+        }
+
+		return "(" + typeStr + ", " + time + ")";
+	}
 }

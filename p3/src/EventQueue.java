@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class maintains a queue of events used for
@@ -47,6 +48,12 @@ public class EventQueue
 	 */
 	public boolean isEmpty() {
 		return events.size() == 0;
+	}
+
+	public String toString() {
+		return "[" + events.stream()
+				.map(i -> i.toString())
+				.collect(Collectors.joining(", ")) + "]";
 	}
 }
 
