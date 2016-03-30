@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.*;
 
 /**
  * This class contains data associated with processes,
@@ -116,6 +115,40 @@ public class Process implements Constants
 	}
 
 	/**
+	 * This method is called when the process leaves the cpu
+	 * @param clock The time when the process leaves the cpu.
+	 */
+	public void leftCpu(long clock) {
+		long lastTimeSpended = clock - timeOfLastEvent;
+		timeSpentInCpu += lastTimeSpended;
+		cpuTimeNeeded = cpuTimeNeeded - lastTimeSpended;
+		timeOfLastEvent = clock;
+	}
+
+	/**
+	 * This method is called when the process leaves the IO
+	 * @param clock The time when the process leaves the IO.
+	 */
+	public void leftIO(long clock) {
+		timeSpentInIo += clock - timeOfLastEvent;
+		timeOfLastEvent = clock;
+	}
+
+	/**
+	 * This method should be called when a process is put into the cpu queue.
+	 */
+	public void entersReadyQueue(long clock) {
+		nofTimesInReadyQueue += 1;
+	}
+
+	/**
+	 * This method should be called when a process is put into the io queue.
+	 */
+	public void entersIoQueue() {
+		nofTimesInIoQueue += 1;
+	}
+
+	/**
 	 * Returns the amount of memory needed by this process.
 	 * @return	The amount of memory needed by this process.
 	 */
@@ -140,5 +173,16 @@ public class Process implements Constants
 		statistics.nofCompletedProcesses++;
 	}
 
-	// Add more methods as needed
+	public long getCpuTimeNeeded() {
+		return cpuTimeNeeded;
+	}
+
+	public long getTimeToNextIoOperation() {
+		return timeToNextIoOperation;
+	}
+
+    public long getAverageIoInterval() {
+        return avgIoInterval;
+    }
+
 }

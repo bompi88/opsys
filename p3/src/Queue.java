@@ -51,7 +51,9 @@ public class Queue extends JPanel implements Constants {
 	 * @return	The first object in the queue.
 	 */
 	public Process getNext() {
-		return content.get(0);
+		if (content.size() > 0)
+			return content.get(0);
+		return null;
 	}
 
 	/**
@@ -59,7 +61,10 @@ public class Queue extends JPanel implements Constants {
 	 * @return	The object that was the first one in the queue.
 	 */
 	public Process removeNext() {
-		Process result = content.remove(0);
+		Process result = null;
+
+		if (content.size() > 0)
+			result = content.remove(0);
 		repaint();
 		return result;
 	}
