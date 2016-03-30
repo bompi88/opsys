@@ -79,6 +79,8 @@ public class Process implements Constants
 		// Assign a process ID
 		processId = nextProcessId++;
 
+        setTimeToNextIoOperation();
+
 		// Assign a pseudo-random color used by the GUI
 		int red = 64 + (int)((processId * 101) % 128);
 		int green = 64 + (int)((processId * 47) % 128);
@@ -181,8 +183,15 @@ public class Process implements Constants
 		return timeToNextIoOperation;
 	}
 
+    public void setTimeToNextIoOperation() {
+        timeToNextIoOperation = (long) ((Math.random() * avgIoInterval) * 2 + 1);
+    }
+
     public long getAverageIoInterval() {
         return avgIoInterval;
     }
 
+    public String toString() {
+        return "[ pid=" + processId + ", memNeeded=" + memoryNeeded + ", cpuNeeded=" + cpuTimeNeeded + "]";
+    }
 }

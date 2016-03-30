@@ -17,7 +17,6 @@ public class IO {
     }
 
     public Event insert(Process process, long clock) {
-        cpu.endProcess(clock);
         ioQueue.insert(process);
         process.entersIoQueue();
 
@@ -36,15 +35,18 @@ public class IO {
         return avgIoTime;
     }
 
-    public void endIoProcess(long clock) {
+    public Event endIoProcess(long clock) {
         Process oldProcess = currentIoProcess;
-        currentIoProcess = null;
 
         // Oppdater når prosessen gikk ut av IO
         oldProcess.leftIO(clock);
+        oldProcess.setTimeToNextIoOperation();
         gui.setIoActive(null);
 
         // Putt prosessen i CPU-køen igjen
         cpu.insert(oldProcess, clock);
+
+        currentIoProcess = null;
+        return cpu.trigger(clock);
     }
 }
