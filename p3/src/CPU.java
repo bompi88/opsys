@@ -35,11 +35,21 @@ public class CPU {
     public boolean hasNext() {
         return !cpuQueue.isEmpty();
     }
-
+    
     public void connectIo(IO io) {
         this.io = io;
     }
 
+
+//    public Event switchProcess(long clock){
+//    	if( activeProcess != null){
+//    		if(!cpuQueue.isEmpty()){
+//    			
+//    		}
+//    	}else{
+//    		
+//    	}
+//    }
     
     public long getMaxTime() {
         return this.maxCpuTime;
