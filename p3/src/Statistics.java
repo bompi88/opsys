@@ -59,6 +59,9 @@ public class Statistics
     /** Number of processes that has been inserted into the I/O Queue */
     public long nofProcessesInsertedIntoIoQueue = 0;
 
+    /** Total cpu time used processing for only the finished processes */
+    public long totalCpuTimeProcessingOnlyCompleted = 0;
+
     /**
 	 * Prints out a report summarizing all collected data about the simulation.
 	 * @param simulationLength	The number of milliseconds that the simulation covered.
@@ -100,18 +103,20 @@ public class Statistics
 
             System.out.println();
             
-			System.out.println("Average time spent in system per process: " +
-                    simulationLength / nofCreatedProcesses + " ms");
-            System.out.println("Average time spent waiting for memory per process: " +
-                    totalTimeSpentWaitingForMemory / nofCreatedProcesses + " ms");
-            System.out.println("Average time spent waiting for cpu per process: " +
-                    totalTimeSpentWaitingForCpu / nofCreatedProcesses + " ms");
-            System.out.println("Average time spent processing per process: " +
-                    totalCpuTimeProcessing / nofCreatedProcesses + " ms");
-            System.out.println("Average time spent waiting for I/O per process: " +
-                    totalTimeSpentWaitingForIo / nofCreatedProcesses + " ms");
-            System.out.println("Average time spent in I/O per process: " +
-                    totalIOTimeProcessing / nofCreatedProcesses + " ms");
+			System.out.println("Average time spent in system per finished process: " +
+                    (totalTimeSpentWaitingForMemory + totalTimeSpentWaitingForCpu +
+                            totalCpuTimeProcessingOnlyCompleted + totalTimeSpentWaitingForIo +
+                            totalIOTimeProcessing) / nofCompletedProcesses + " ms");
+            System.out.println("Average time spent waiting for memory per finished process: " +
+                    totalTimeSpentWaitingForMemory / nofCompletedProcesses + " ms");
+            System.out.println("Average time spent waiting for cpu per finished process: " +
+                    totalTimeSpentWaitingForCpu / nofCompletedProcesses + " ms");
+            System.out.println("Average time spent processing per finished process: " +
+                    totalCpuTimeProcessingOnlyCompleted / nofCompletedProcesses + " ms");
+            System.out.println("Average time spent waiting for I/O per finished process: " +
+                    totalTimeSpentWaitingForIo / nofCompletedProcesses + " ms");
+            System.out.println("Average time spent in I/O per finished process: " +
+                    totalIOTimeProcessing / nofCompletedProcesses + " ms");
 		}
 	}
 }
