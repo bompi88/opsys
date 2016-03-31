@@ -11,39 +11,32 @@ public class RunTests {
 
         long simulationLength = 250000;
 
+        long avgIoTime = 225;
+        long avgArrivalInterval = 5000;
+
         long memorySizeMin = 100;
         long maxCpuTimeMin = 100;
-        long avgIoTimeMin = 1;
-        long avgArrivalIntervalMin = 10;
 
         long memorySizeMax = 10000;
         long maxCpuTimeMax = 10000;
-        long avgIoTimeMax = 1000;
-        long avgArrivalIntervalMax = 10000;
 
         Comparator<Run> comparator = new RunComparator();
         PriorityQueue<Run> heap = new PriorityQueue<>(10, comparator);
 
-        for (long memorySize = memorySizeMin; memorySize <= memorySizeMax; memorySize += 1000) {
-            for (long maxCpuTime = maxCpuTimeMin; maxCpuTime <= maxCpuTimeMax; maxCpuTime += 100) {
+        for (long memorySize = memorySizeMin; memorySize <= memorySizeMax; memorySize += 10) {
+            for (long maxCpuTime = maxCpuTimeMin; maxCpuTime <= maxCpuTimeMax; maxCpuTime += 10) {
                 System.out.println("Process " + ((float) memorySize / memorySizeMax) * 100 + "%");
 
-                for (long avgIoTime = avgIoTimeMin; avgIoTime <= avgIoTimeMax; avgIoTime += 100) {
+                Queue memoryQueue = new Queue("memory queue", 10, Constants.EAST);
+                Queue cpuQueue = new Queue("CPU queue", 10, Constants.WEST);
+                Queue ioQueue = new Queue("I/O queue", 10, Constants.EAST);
 
-                    //for (long avgArrivalInterval = avgArrivalIntervalMin; avgArrivalInterval <= avgArrivalIntervalMax; avgArrivalInterval += 100) {
-                        long avgArrivalInterval = 5000;
-                        Queue memoryQueue = new Queue("memory queue", 10, Constants.EAST);
-                        Queue cpuQueue = new Queue("CPU queue", 10, Constants.WEST);
-                        Queue ioQueue = new Queue("I/O queue", 10, Constants.EAST);
+                Simulator sim = new Simulator(memoryQueue, cpuQueue, ioQueue, memorySize, maxCpuTime, avgIoTime, simulationLength, avgArrivalInterval, null);
+                Statistics stats = sim.simulate();
 
-                        Simulator sim = new Simulator(memoryQueue, cpuQueue, ioQueue, memorySize, maxCpuTime, avgIoTime, simulationLength, avgArrivalInterval, null);
-                        Statistics stats = sim.simulate();
+                Run run = new Run(simulationLength, memorySize, maxCpuTime, avgIoTime, avgArrivalInterval, stats);
 
-                        Run run = new Run(simulationLength, memorySize, maxCpuTime, avgIoTime, avgArrivalInterval, stats);
-
-                        heap.add(run);
-                    //}
-                }
+                heap.add(run);
             }
         }
 
@@ -51,7 +44,7 @@ public class RunTests {
             Run best = heap.remove();
 
             System.out.println(best);
-            // best.stats.printReport(simulationLength);
+            best.stats.printReport(simulationLength);
         }
     }
 }
