@@ -57,6 +57,13 @@ public class Process implements Constants
 	/** The global time of the last event involving this process */
 	private long timeOfLastEvent;
 
+    /** Number of times this process has been processed by IO */
+    private long nofTimesProcessedByIo = 0;
+
+    private long nofForcedProcessSwitches = 0;
+
+    private long isCompleted = 0;
+
 	/**
 	 * Creates a new process with given parameters. Other parameters are randomly
 	 * determined.
@@ -131,10 +138,14 @@ public class Process implements Constants
 	}
 
     public void entersCpu(long clock) {
+    	nofTimesInReadyQueue ++;
+        timeSpentInReadyQueue += clock - timeOfLastEvent;
         timeOfLastEvent = clock;
     }
 
     public void entersIO(long clock) {
+    	nofTimesInIoQueue++;
+        timeSpentWaitingForIo += clock - timeOfLastEvent;
         timeOfLastEvent = clock;
     }
 
@@ -142,6 +153,13 @@ public class Process implements Constants
         timeOfLastEvent = clock;
     }
 
+    public void forcedProcessSwitch() {
+        nofForcedProcessSwitches++;
+    }
+
+    public void setCompleted() {
+        isCompleted = 1;
+    }
 	/**
 	 * This method is called when the process leaves the IO
 	 * @param clock The time when the process leaves the IO.
@@ -151,15 +169,15 @@ public class Process implements Constants
 		
 		timeSpentInIo += clock - timeOfLastEvent;
 		timeOfLastEvent = clock;
-		
-		
+
+        nofTimesProcessedByIo++;
 	}
 
 	/**
 	 * This method should be called when a process is put into the cpu queue.
 	 */
 	public void entersReadyQueue(long clock) {
-		nofTimesInReadyQueue += 1;
+        nofTimesInReadyQueue += 1;
 	}
 
 	/**
@@ -190,8 +208,14 @@ public class Process implements Constants
 
         statistics.totalCpuTimeProcessing += timeSpentInCpu;
         statistics.totalIOTimeProcessing += timeSpentInIo;
+        
+        statistics.nofProcessesInsertedIntoCpuQueue += nofTimesInReadyQueue;
+        statistics.nofProcessesInsertedIntoIoQueue += nofTimesInIoQueue;
 
-		statistics.nofCompletedProcesses++;
+		statistics.nofCompletedProcesses += isCompleted;
+
+        statistics.nofProcessedIoOperations += nofTimesProcessedByIo;
+        statistics.nofForcedProcessSwitches += nofForcedProcessSwitches;
 
 	}
 

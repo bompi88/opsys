@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class CPU {
 
     private final Queue cpuQueue;
@@ -19,7 +21,6 @@ public class CPU {
     public void insert(Process process, long clock) {
         cpuQueue.insert(process);
         process.entersReadyQueue(clock);
-        statistics.nofProcessesInsertedIntoCpuQueue++;
 
     }
 
@@ -82,6 +83,10 @@ public class CPU {
     public Event switchProcess(long clock) {
         activeProcess.leftCpu(clock);
         insert(activeProcess, clock);
+
+        if (cpuQueue.getQueueLength() > 1) {
+            activeProcess.forcedProcessSwitch();
+        }
         activeProcess = null;
 
         return runNextProcess(clock);
@@ -105,9 +110,9 @@ public class CPU {
      * @param clock	current time
      */
     public Event endProcess(long clock) {
-        //activeProcess.leftCpu(clock);
+        activeProcess.leftCpu(clock);
+        activeProcess.setCompleted();
         activeProcess.updateStatistics(statistics);
-
         memory.processCompleted(activeProcess);
         activeProcess = null;
         gui.setCpuActive(null);
@@ -120,6 +125,7 @@ public class CPU {
     public Process getActiveProcess() {
         return activeProcess;
     }
+
     
 	/**
 	 * This method is called when a discrete amount of time has passed.
@@ -131,4 +137,13 @@ public class CPU {
 			statistics.cpuQueueLargestLength = cpuQueue.getQueueLength();
 		}
 	}
+
+    public List<Process> getAll() {
+        List<Process> allProcesses = cpuQueue.getAll();
+        if (activeProcess != null) {
+            allProcesses.add(activeProcess);
+        }
+
+        return allProcesses;
+    }
 }

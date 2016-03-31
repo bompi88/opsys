@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class IO {
 
     private final Queue ioQueue;
@@ -19,7 +21,6 @@ public class IO {
     public Event insert(Process process, long clock) {
         ioQueue.insert(process);
         process.entersIoQueue();
-        statistics.nofProcessesInsertedIntoIoQueue++;
 
         // Hvis det ikke kjører en IO prosess, kjør den nye med en gang
         if (currentIoProcess == null) {
@@ -68,7 +69,11 @@ public class IO {
         cpu.insert(oldProcess, clock);
 
         currentIoProcess = null;
+        
+        statistics.nofProcessedIoOperations++;
+
         return cpu.trigger(clock);
+        
     }
 
     /**
@@ -100,5 +105,14 @@ public class IO {
 		}
 
 	}
+
+    public List<Process> getAll() {
+        List<Process> allProcesses = ioQueue.getAll();
+        if (currentIoProcess != null) {
+            allProcesses.add(currentIoProcess);
+        }
+
+        return allProcesses;
+    }
 
 }

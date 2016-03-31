@@ -99,6 +99,18 @@ public class Simulator implements Constants
 
 		System.out.println("..done.");
 
+		for (Process process: io.getAll()) {
+			process.updateStatistics(statistics);
+		}
+
+		for (Process process: cpu.getAll()) {
+			process.updateStatistics(statistics);
+		}
+
+		for (Process process: memory.getAll()) {
+			process.updateStatistics(statistics);
+		}
+
         // End the simulation by printing out the required statistics
 		statistics.printReport(simulationLength);
 	}
@@ -135,6 +147,7 @@ public class Simulator implements Constants
 		// Create a new process
 		Process newProcess = new Process(memory.getMemorySize(), clock);
 		memory.insertProcess(newProcess);
+		newProcess.entersMemoryQueue(clock);
 		flushMemoryQueue();
 
         // Add an event for the next process arrival

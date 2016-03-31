@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * This class implements functionality associated with
  * the memory device of the simulated system.
@@ -80,6 +82,10 @@ public class Memory {
 	 */
 	public void processCompleted(Process p) {
 		freeMemory += p.getMemoryNeeded();
+	}
+
+	public List<Process> getAll() {
+		return memoryQueue.getAll();
 	}
 }
 
