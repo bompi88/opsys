@@ -21,9 +21,6 @@ public interface Constants
 	/** The orientation WEST */
 	int WEST = 1;
 
-	/** The orientation NORTH */
-	int NORTH = 2;
-
 	/** The orientation EAST */
 	int EAST = 3;
 }

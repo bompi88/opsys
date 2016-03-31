@@ -53,10 +53,8 @@ public class Simulator implements Constants
 		this.eventQueue = new EventQueue();
 
         this.memory = new Memory(memoryQueue, memorySize, statistics);
-        this.cpu = new CPU(cpuQueue, maxCpuTime, statistics, memory);
-        this.io = new IO(ioQueue, avgIoTime, statistics, cpu);
-
-        cpu.connectIo(io);
+        this.cpu = new CPU(cpuQueue, maxCpuTime, statistics, memory, gui);
+        this.io = new IO(ioQueue, avgIoTime, statistics, cpu, gui);
 
 		clock = 0;
 	}
@@ -77,6 +75,7 @@ public class Simulator implements Constants
         // Process events until the simulation length is exceeded:
 		while (clock < simulationLength && !eventQueue.isEmpty()) {
 			// Find the next event
+			System.out.println(eventQueue);
 			Event event = eventQueue.getNextEvent();
 
             // Find out how much time that passed...
@@ -85,7 +84,6 @@ public class Simulator implements Constants
             // ...and update the clock.
 			clock = event.getTime();
 
-			System.out.println(eventQueue);
             // Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
 			gui.timePassed(timeDifference);
@@ -94,9 +92,6 @@ public class Simulator implements Constants
 			if (clock < simulationLength) {
 				processEvent(event);
 			}
-
-			// Note that the processing of most events should lead to new
-			// events being added to the event queue!
 
 		}
 
@@ -158,8 +153,15 @@ public class Simulator implements Constants
 		// As long as there is enough memory, processes are moved from the memory queue to the cpu queue
 		while(p != null) {
 
-			// Also add new events to the event queue if needed
-            cpu.insert(p);
+			// Insert process to cpu
+			cpu.insert(p, clock);
+			p.leftMemoryQueue(clock);
+
+			Event event = cpu.trigger(clock);
+
+			if (event != null) {
+				eventQueue.insertEvent(event);
+			}
 
             // Try to use the freed memory:
 			flushMemoryQueue();
@@ -170,25 +172,27 @@ public class Simulator implements Constants
 			// Check for more free memory
 			p = memory.checkMemory(clock);
 		}
-
-        if(cpu.hasNext()) {
-            eventQueue.insertEvent(new Event(SWITCH_PROCESS, clock + cpu.getMaxTime()));
-        }
 	}
 
 	/**
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
-        Event event = cpu.process();
-        eventQueue.insertEvent(event);
+        Event event = cpu.switchProcess(clock);
+
+		if (event != null) {
+			eventQueue.insertEvent(event);
+		}
 	}
 
 	/**
 	 * Ends the active process, and deallocates any resources allocated to it.
 	 */
 	private void endProcess() {
-		cpu.endProcess();
+		Event event = cpu.endProcess(clock);
+		if (event != null) {
+			eventQueue.insertEvent(event);
+		}
 	}
 
 	/**
@@ -196,9 +200,27 @@ public class Simulator implements Constants
 	 * perform an I/O operation.
 	 */
 	private void processIoRequest() {
-        long processingTime = io.process();
-        long timeProcessed = clock + processingTime;
-        eventQueue.insertEvent(new Event(END_IO, timeProcessed));
+		// Få den nåværende kjørende prosessen
+		Process currentProcess = cpu.getActiveProcess();
+
+		// Ikke gjør noe hvis det ikke kjører en prosess
+		if (currentProcess == null) {
+			return;
+		}
+
+		// Flytt den gamle til IO køen
+		Event event = io.insert(currentProcess, clock);
+
+		// Kjør ny prosess i køen
+		Event cpuEvent = cpu.runNextProcess(clock);
+
+		currentProcess.leftCpu(clock);
+
+		// Send event til når IO er ferdig prosessert.
+        eventQueue.insertEvent(event);
+
+		// Send event til når neste prosess er ferdig.
+		eventQueue.insertEvent(cpuEvent);
 	}
 
 	/**
@@ -206,13 +228,15 @@ public class Simulator implements Constants
 	 * is done with its I/O operation.
 	 */
 	private void endIoOperation() {
-        long processingTime = io.endProcess();
-        long timeProcessed = clock + processingTime;
+		Event event = io.endIoProcess(clock);
+		if (event != null) {
+			eventQueue.insertEvent(event);
+		}
 
-        // Add next IO process if any
-        if(io.hasNext()) {
-            eventQueue.insertEvent(new Event(IO_REQUEST, timeProcessed));
-        }
+		System.out.println("BEFORE");
+		System.out.println(event);
+		System.out.println("AFTER");
+
 	}
 
 	/**
