@@ -67,7 +67,11 @@ public class IO {
         cpu.insert(oldProcess, clock);
 
         currentIoProcess = null;
+        
+        statistics.nofProcessedIoOperations++;
+
         return cpu.trigger(clock);
+        
     }
 
     /**
