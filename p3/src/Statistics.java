@@ -81,10 +81,10 @@ public class Statistics
         System.out.println();
         System.out.println("Total CPU time spent processing: " + totalCpuTimeProcessing);
         System.out.println("Fraction of CPU time spent processing: " +
-                ((double)100*totalCpuTimeProcessing / simulationLength + "%"));
+                ((float)100*totalCpuTimeProcessing / simulationLength + "%"));
         System.out.println("Total CPU time spent waiting: " + (simulationLength - totalCpuTimeProcessing));
         System.out.println("Fraction of CPU time spent waiting: " + 
-                (double)(100-((double)100*totalCpuTimeProcessing/simulationLength))+"%");
+                (float)(100-((float)100*totalCpuTimeProcessing/simulationLength))+"%");
 
         System.out.println();
 		System.out.println("Largest occuring memory queue length: " + memoryQueueLargestLength);
