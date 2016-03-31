@@ -73,7 +73,7 @@ public class Statistics
         System.out.println("Number of (forced) process switches: " + nofForcedProcessSwitches);
         System.out.println("Number of processed I/O operations: " + nofProcessedIoOperations);
         System.out.println("Average throughput (processes per second): " +
-                (float)nofCompletedProcesses / (totalCpuTimeProcessing + totalCpuTimeWaiting));
+                (float)nofCompletedProcesses * 1000 / (totalCpuTimeProcessing + (simulationLength - totalCpuTimeProcessing)));
 
         System.out.println();
         System.out.println("Total CPU time spent processing: " + totalCpuTimeProcessing);

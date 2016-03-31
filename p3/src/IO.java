@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class IO {
 
     private final Queue ioQueue;
@@ -99,5 +101,14 @@ public class IO {
 		}
 
 	}
+
+    public List<Process> getAll() {
+        List<Process> allProcesses = ioQueue.getAll();
+        if (currentIoProcess != null) {
+            allProcesses.add(currentIoProcess);
+        }
+
+        return allProcesses;
+    }
 
 }

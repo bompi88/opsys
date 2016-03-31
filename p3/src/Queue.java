@@ -1,6 +1,7 @@
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * A queue in a queuing network. This class both offers ordinary queue
@@ -83,6 +84,10 @@ public class Queue extends JPanel implements Constants {
 	 */
 	public int getQueueLength() {
 		return content.size();
+	}
+
+	public List<Process> getAll() {
+		return content;
 	}
 
 	/**
