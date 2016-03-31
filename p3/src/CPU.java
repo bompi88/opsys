@@ -64,13 +64,17 @@ public class CPU {
             // hent neste prosess
             activeProcess = cpuQueue.removeNext();
             activeProcess.entersCpu(clock);
-            gui.setCpuActive(activeProcess);
+
+            if (gui != null)
+                gui.setCpuActive(activeProcess);
 
             // Kjør den nye prosessen og returner den genererte eventen
             return run(activeProcess, clock);
         } else {
             activeProcess = null;
-            gui.setCpuActive(null);
+
+            if (gui != null)
+                gui.setCpuActive(null);
         }
 
         return null;
@@ -115,7 +119,9 @@ public class CPU {
         activeProcess.updateStatistics(statistics);
         memory.processCompleted(activeProcess);
         activeProcess = null;
-        gui.setCpuActive(null);
+
+        if (gui != null)
+            gui.setCpuActive(null);
 
         return trigger(clock);
     }

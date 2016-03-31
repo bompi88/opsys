@@ -23,9 +23,6 @@ public class Statistics
     /** Total time spent in IO */
     public long totalIOTimeProcessing = 0;
 
-    /** Total CPU time spent waiting */
-    public long totalCpuTimeWaiting = 0;
-
     /** The total time that all completed processes have spent waiting for memory */
 	public long totalTimeSpentWaitingForMemory = 0;
 
@@ -84,7 +81,7 @@ public class Statistics
                 ((double)100*totalCpuTimeProcessing / simulationLength + "%"));
         System.out.println("Total CPU time spent waiting: " + (simulationLength - totalCpuTimeProcessing));
         System.out.println("Fraction of CPU time spent waiting: " + 
-                (double)(100-((double)100*totalCpuTimeProcessing/simulationLength))+"%");
+                (100-((double)100*totalCpuTimeProcessing/simulationLength))+"%");
 
         System.out.println();
 		System.out.println("Largest occuring memory queue length: " + memoryQueueLargestLength);
