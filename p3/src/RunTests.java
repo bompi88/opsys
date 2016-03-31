@@ -51,6 +51,7 @@ public class RunTests {
             Run best = heap.remove();
 
             System.out.println(best);
+            best.stats.printReport(simulationLength);
         }
     }
 }
