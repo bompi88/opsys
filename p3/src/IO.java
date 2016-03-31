@@ -19,6 +19,7 @@ public class IO {
     public Event insert(Process process, long clock) {
         ioQueue.insert(process);
         process.entersIoQueue();
+        statistics.nofProcessesInsertedIntoIoQueue++;
 
         // Hvis det ikke kjører en IO prosess, kjør den nye med en gang
         if (currentIoProcess == null) {

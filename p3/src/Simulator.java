@@ -85,7 +85,7 @@ public class Simulator implements Constants
             // Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
 			gui.timePassed(timeDifference);
-			
+			cpu.timePassed(timeDifference);
 			io.timePassed(timeDifference);
 
 			

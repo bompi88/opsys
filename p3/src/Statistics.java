@@ -99,6 +99,7 @@ public class Statistics
                     (float)nofProcessesInsertedIntoIoQueue / nofCreatedProcesses);
 
             System.out.println();
+            
 			System.out.println("Average time spent in system per process: " +
                     simulationLength / nofCompletedProcesses + " ms");
             System.out.println("Average time spent waiting for memory per process: " +

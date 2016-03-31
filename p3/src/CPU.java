@@ -19,6 +19,8 @@ public class CPU {
     public void insert(Process process, long clock) {
         cpuQueue.insert(process);
         process.entersReadyQueue(clock);
+        statistics.nofProcessesInsertedIntoCpuQueue++;
+
     }
 
     /**
@@ -118,4 +120,15 @@ public class CPU {
     public Process getActiveProcess() {
         return activeProcess;
     }
+    
+	/**
+	 * This method is called when a discrete amount of time has passed.
+	 * @param timePassed	The amount of time that has passed since the last call to this method.
+	 */
+	public void timePassed(long timePassed) {
+		statistics.cpuQueueLengthTime += cpuQueue.getQueueLength()*timePassed;
+		if (cpuQueue.getQueueLength() > statistics.cpuQueueLargestLength) {
+			statistics.cpuQueueLargestLength = cpuQueue.getQueueLength();
+		}
+	}
 }
