@@ -65,7 +65,6 @@ public class Simulator implements Constants
 	 * GUI is clicked.
 	 */
 	public void simulate() {
-		// TODO: You may want to extend this method somewhat.
 
 		System.out.print("Simulating...");
 
@@ -75,8 +74,6 @@ public class Simulator implements Constants
         // Process events until the simulation length is exceeded:
 		while (clock < simulationLength && !eventQueue.isEmpty()) {
 			// Find the next event
-			System.out.println(eventQueue);
-			System.out.println(clock);
 			Event event = eventQueue.getNextEvent();
 
             // Find out how much time that passed...
@@ -162,17 +159,13 @@ public class Simulator implements Constants
 			cpu.insert(p, clock);
 			p.leftMemoryQueue(clock);
 
+			// Hvis en ny prosess blir lagt til i køen, gi bedskjed til
+			// cpu sånn at den kan kjøre prosessen hvis det er ledig.
+			// Generer også en event hvis den går inn i cpuen.
 			Event event = cpu.trigger(clock);
-
 			if (event != null) {
 				eventQueue.insertEvent(event);
 			}
-
-            // Try to use the freed memory:
-			flushMemoryQueue();
-
-            // Update statistics
-			p.updateStatistics(statistics);
 
 			// Check for more free memory
 			p = memory.checkMemory(clock);
@@ -183,6 +176,8 @@ public class Simulator implements Constants
 	 * Simulates a process switch.
 	 */
 	private void switchProcess() {
+		// Bytt prosess som jobber i cpu og sleng inn en ny event
+		// ettersom den trenger IO, er ferdig eller trenger mer cpu.
         Event event = cpu.switchProcess(clock);
 
 		if (event != null) {
@@ -194,6 +189,8 @@ public class Simulator implements Constants
 	 * Ends the active process, and deallocates any resources allocated to it.
 	 */
 	private void endProcess() {
+		// Avlutt en prosess og eventuelt legg til ny prosess event
+		// hvis en ny prosess bruk lagt til i cpuen.
 		Event event = cpu.endProcess(clock);
 		if (event != null) {
 			eventQueue.insertEvent(event);
@@ -216,6 +213,7 @@ public class Simulator implements Constants
 		// Flytt den gamle til IO køen
 		Event event = io.insert(currentProcess, clock);
 
+		// Viktig for å oppdatere tid siden sist event, sånn at tidsverdiene blir riktig satt.
 		currentProcess.leftCpu(clock);
 
 		// Kjør ny prosess i køen
@@ -236,11 +234,13 @@ public class Simulator implements Constants
 	 * is done with its I/O operation.
 	 */
 	private void endIoOperation() {
+		// Slutt IO prosess med en event
 		Event event = io.endIoProcess(clock);
 		if (event != null) {
 			eventQueue.insertEvent(event);
 		}
 
+		// Kjør ny IO prosess hvis den finnes i køen
 		Event ioEvent = io.trigger(clock);
 
 		if (ioEvent != null) {
