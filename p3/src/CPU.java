@@ -56,6 +56,12 @@ public class CPU {
      * Kjører neste prosess hvis det er prosesser i køen.
      * @param clock	current time
      */
+    
+    /* The period of the time quantum should not very short as this leads to the process moving through the system very quickly which is positive but 
+     * there will be processing overhead involved in handling the clock interrupt, performing scheduling and dispatching the function. A useful guide
+     * states that the time quantum should be slightly greater than the time required for a typical interaction process function. 
+     */
+    
     public Event runNextProcess(long clock) {
         // Hvis vi har en kø må nest prosess få lov til å gå inn i CPU'en,
         // hvis ikke lar vi prosessen fortsette å kjøre.
@@ -64,13 +70,17 @@ public class CPU {
             // hent neste prosess
             activeProcess = cpuQueue.removeNext();
             activeProcess.entersCpu(clock);
-            gui.setCpuActive(activeProcess);
+
+            if (gui != null)
+                gui.setCpuActive(activeProcess);
 
             // Kjør den nye prosessen og returner den genererte eventen
             return run(activeProcess, clock);
         } else {
             activeProcess = null;
-            gui.setCpuActive(null);
+
+            if (gui != null)
+                gui.setCpuActive(null);
         }
 
         return null;
@@ -115,7 +125,9 @@ public class CPU {
         activeProcess.updateStatistics(statistics);
         memory.processCompleted(activeProcess);
         activeProcess = null;
-        gui.setCpuActive(null);
+
+        if (gui != null)
+            gui.setCpuActive(null);
 
         return trigger(clock);
     }

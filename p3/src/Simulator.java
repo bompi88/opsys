@@ -64,9 +64,10 @@ public class Simulator implements Constants
 	 * This method is called when the "Start simulation" button in the
 	 * GUI is clicked.
 	 */
-	public void simulate() {
+	public Statistics simulate() {
 
-		System.out.print("Simulating...");
+        if (gui != null)
+		    System.out.print("Simulating...");
 
 		// Genererate the first process arrival event
 		eventQueue.insertEvent(new Event(NEW_PROCESS, 0));
@@ -84,9 +85,12 @@ public class Simulator implements Constants
 
             // Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
-			gui.timePassed(timeDifference);
 			cpu.timePassed(timeDifference);
 			io.timePassed(timeDifference);
+
+			if (gui != null)
+				gui.timePassed(timeDifference);
+
 
 			
 
@@ -97,7 +101,8 @@ public class Simulator implements Constants
 
 		}
 
-		System.out.println("..done.");
+        if (gui != null)
+		    System.out.println("..done.");
 
 		for (Process process: io.getAll()) {
 			process.updateStatistics(statistics);
@@ -112,7 +117,10 @@ public class Simulator implements Constants
 		}
 
         // End the simulation by printing out the required statistics
-		statistics.printReport(simulationLength);
+        if (gui != null)
+		    statistics.printReport(simulationLength);
+
+        return statistics;
 	}
 
 	/**

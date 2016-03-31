@@ -202,21 +202,21 @@ public class Process implements Constants
 	 * @param statistics	The Statistics object to be updated.
 	 */
 	public void updateStatistics(Statistics statistics) {
-		statistics.totalTimeSpentWaitingForMemory += timeSpentWaitingForMemory;
-        statistics.totalTimeSpentWaitingForCpu += timeSpentInReadyQueue;
-        statistics.totalTimeSpentWaitingForIo += timeSpentWaitingForIo;
-
         statistics.totalCpuTimeProcessing += timeSpentInCpu;
-        statistics.totalIOTimeProcessing += timeSpentInIo;
-        
+
         statistics.nofProcessesInsertedIntoCpuQueue += nofTimesInReadyQueue;
         statistics.nofProcessesInsertedIntoIoQueue += nofTimesInIoQueue;
-
-		statistics.nofCompletedProcesses += isCompleted;
-
         statistics.nofProcessedIoOperations += nofTimesProcessedByIo;
         statistics.nofForcedProcessSwitches += nofForcedProcessSwitches;
+		statistics.nofCompletedProcesses += isCompleted;
 
+		if (isCompleted == 1) {
+			statistics.totalIOTimeProcessing += timeSpentInIo;
+			statistics.totalTimeSpentWaitingForMemory += timeSpentWaitingForMemory;
+			statistics.totalTimeSpentWaitingForCpu += timeSpentInReadyQueue;
+			statistics.totalTimeSpentWaitingForIo += timeSpentWaitingForIo;
+			statistics.totalCpuTimeProcessingOnlyCompleted += timeSpentInCpu;
+		}
 	}
 
 	public long getCpuTimeNeeded() {
@@ -228,11 +228,7 @@ public class Process implements Constants
 	}
 
     public void setTimeToNextIoOperation() {
-        timeToNextIoOperation = (long) ((Math.random() * avgIoInterval) * 2 + 1);
-    }
-
-    public long getAverageIoInterval() {
-        return avgIoInterval;
+        timeToNextIoOperation = ((long) (Math.random() * avgIoInterval) * 2 + 1);
     }
 
     public String toString() {

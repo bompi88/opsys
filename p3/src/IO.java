@@ -25,7 +25,9 @@ public class IO {
         // Hvis det ikke kjører en IO prosess, kjør den nye med en gang
         if (currentIoProcess == null) {
             currentIoProcess = ioQueue.removeNext();
-            gui.setIoActive(currentIoProcess);
+
+            if (gui != null)
+                gui.setIoActive(currentIoProcess);
 
             // Send event til når IO er ferdig
             return new Event(Constants.END_IO, clock + getRandomIoTime());
@@ -45,13 +47,17 @@ public class IO {
             // hent neste prosess
             currentIoProcess = ioQueue.removeNext();
             currentIoProcess.entersIO(clock);
-            gui.setIoActive(currentIoProcess);
+
+            if (gui != null)
+                gui.setIoActive(currentIoProcess);
 
             // Send event til når IO er ferdig
             return new Event(Constants.END_IO, clock + getRandomIoTime());
         } else {
             currentIoProcess = null;
-            gui.setIoActive(null);
+
+            if (gui != null)
+                gui.setIoActive(null);
         }
 
         return null;
@@ -63,15 +69,13 @@ public class IO {
         // Oppdater når prosessen gikk ut av IO
         oldProcess.leftIO(clock);
         oldProcess.setTimeToNextIoOperation();
-        gui.setIoActive(null);
+
+        if (gui != null)
+            gui.setIoActive(null);
 
         // Putt prosessen i CPU-køen igjen
         cpu.insert(oldProcess, clock);
-
         currentIoProcess = null;
-        
-        statistics.nofProcessedIoOperations++;
-
         return cpu.trigger(clock);
         
     }
@@ -90,7 +94,7 @@ public class IO {
     }
 
     public long getRandomIoTime() {
-        return avgIoTime;
+        return (long) (Math.random() * avgIoTime) * 2 + 1;
     }
     
     /**
