@@ -88,6 +88,10 @@ public class Simulator implements Constants
             // Let the memory unit and the GUI know that time has passed
 			memory.timePassed(timeDifference);
 			gui.timePassed(timeDifference);
+			
+			io.timePassed(timeDifference);
+
+			
 
             // Deal with the event
 			if (clock < simulationLength) {
@@ -219,9 +223,11 @@ public class Simulator implements Constants
 
 
 		// Send event til når IO er ferdig prosessert.
-        eventQueue.insertEvent(event);
-
-		// Send event til når neste prosess er ferdig.
+		if (event != null) {
+			eventQueue.insertEvent(event);
+		}
+       
+		// Send event til event-køen når neste prosess er ferdig.
 		eventQueue.insertEvent(cpuEvent);
 	}
 
