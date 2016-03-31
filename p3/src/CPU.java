@@ -56,6 +56,12 @@ public class CPU {
      * Kjører neste prosess hvis det er prosesser i køen.
      * @param clock	current time
      */
+    
+    /* The period of the time quantum should not very short as this leads to the process moving through the system very quickly which is positive but 
+     * there will be processing overhead involved in handling the clock interrupt, performing scheduling and dispatching the function. A useful guide
+     * states that the time quantum should be slightly greater than the time required for a typical interaction process function. 
+     */
+    
     public Event runNextProcess(long clock) {
         // Hvis vi har en kø må nest prosess få lov til å gå inn i CPU'en,
         // hvis ikke lar vi prosessen fortsette å kjøre.
