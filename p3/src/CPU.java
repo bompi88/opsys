@@ -21,11 +21,6 @@ public class CPU {
         process.entersReadyQueue(clock);
     }
 
-<<<<<<< HEAD
-    public Event process() {
-        // TODO: implement this
-        Process process = cpuQueue.getNext();
-=======
     /**
      * Kjører en prosess og tar seg av cpu og io events.
      * @param clock	current time
@@ -37,7 +32,6 @@ public class CPU {
             // Vi må bytte til neste prosess når denne prosessens tid er brukt opp i cpuen,
 
             return new Event(Constants.SWITCH_PROCESS, clock + maxCpuTime);
->>>>>>> work-in-progress
 
         // Hvis vi rekker å bli ferdig med prosessen denne syklusen
         } else if (process.getCpuTimeNeeded() <= maxCpuTime) {
@@ -100,8 +94,6 @@ public class CPU {
             return runNextProcess(clock);
         }
 
-        System.out.println("SOMETHING IS WRONG");
-        System.out.println(activeProcess);
         return null;
     }
 
@@ -112,7 +104,7 @@ public class CPU {
     public Event endProcess(long clock) {
         activeProcess.leftCpu(clock);
         activeProcess.updateStatistics(statistics);
-        System.out.println("Process ended: " + activeProcess);
+
         memory.processCompleted(activeProcess);
         activeProcess = null;
         gui.setCpuActive(null);
