@@ -30,8 +30,8 @@ public class RunTests {
 
                 for (long avgIoTime = avgIoTimeMin; avgIoTime <= avgIoTimeMax; avgIoTime += 100) {
 
-                    for (long avgArrivalInterval = avgArrivalIntervalMin; avgArrivalInterval <= avgArrivalIntervalMax; avgArrivalInterval += 100) {
-
+                    //for (long avgArrivalInterval = avgArrivalIntervalMin; avgArrivalInterval <= avgArrivalIntervalMax; avgArrivalInterval += 100) {
+                        long avgArrivalInterval = 5000;
                         Queue memoryQueue = new Queue("memory queue", 10, Constants.EAST);
                         Queue cpuQueue = new Queue("CPU queue", 10, Constants.WEST);
                         Queue ioQueue = new Queue("I/O queue", 10, Constants.EAST);
@@ -42,16 +42,16 @@ public class RunTests {
                         Run run = new Run(simulationLength, memorySize, maxCpuTime, avgIoTime, avgArrivalInterval, stats);
 
                         heap.add(run);
-                    }
+                    //}
                 }
             }
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             Run best = heap.remove();
 
             System.out.println(best);
-            best.stats.printReport(simulationLength);
+            // best.stats.printReport(simulationLength);
         }
     }
 }
