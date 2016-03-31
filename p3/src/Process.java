@@ -186,6 +186,7 @@ public class Process implements Constants
         statistics.totalIOTimeProcessing += timeSpentInIo;
 
 		statistics.nofCompletedProcesses++;
+
 	}
 
 	public long getCpuTimeNeeded() {

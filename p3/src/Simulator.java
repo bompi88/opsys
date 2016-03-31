@@ -65,7 +65,6 @@ public class Simulator implements Constants
 	 * GUI is clicked.
 	 */
 	public void simulate() {
-		// TODO: You may want to extend this method somewhat.
 
 		System.out.print("Simulating...");
 
@@ -163,12 +162,6 @@ public class Simulator implements Constants
 			if (event != null) {
 				eventQueue.insertEvent(event);
 			}
-
-            // Try to use the freed memory:
-			flushMemoryQueue();
-
-            // Update statistics
-			p.updateStatistics(statistics);
 
 			// Check for more free memory
 			p = memory.checkMemory(clock);
