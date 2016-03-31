@@ -86,7 +86,7 @@ public class IO {
     }
 
     public long getRandomIoTime() {
-        return avgIoTime;
+        return (long) (Math.random() * avgIoTime) * 2 + 1;
     }
     
     /**
