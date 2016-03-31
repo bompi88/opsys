@@ -123,9 +123,22 @@ public class Process implements Constants
 	public void leftCpu(long clock) {
 		long lastTimeSpended = clock - timeOfLastEvent;
 		timeSpentInCpu += lastTimeSpended;
+
 		cpuTimeNeeded = cpuTimeNeeded - lastTimeSpended;
 		timeOfLastEvent = clock;
 	}
+
+    public void entersCpu(long clock) {
+        timeOfLastEvent = clock;
+    }
+
+    public void entersIO(long clock) {
+        timeOfLastEvent = clock;
+    }
+
+    public void entersMemoryQueue(long clock) {
+        timeOfLastEvent = clock;
+    }
 
 	/**
 	 * This method is called when the process leaves the IO

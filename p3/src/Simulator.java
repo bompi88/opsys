@@ -76,6 +76,7 @@ public class Simulator implements Constants
 		while (clock < simulationLength && !eventQueue.isEmpty()) {
 			// Find the next event
 			System.out.println(eventQueue);
+			System.out.println(clock);
 			Event event = eventQueue.getNextEvent();
 
             // Find out how much time that passed...
@@ -211,10 +212,11 @@ public class Simulator implements Constants
 		// Flytt den gamle til IO køen
 		Event event = io.insert(currentProcess, clock);
 
+		currentProcess.leftCpu(clock);
+
 		// Kjør ny prosess i køen
 		Event cpuEvent = cpu.runNextProcess(clock);
 
-		currentProcess.leftCpu(clock);
 
 		// Send event til når IO er ferdig prosessert.
         eventQueue.insertEvent(event);
@@ -233,10 +235,11 @@ public class Simulator implements Constants
 			eventQueue.insertEvent(event);
 		}
 
-		System.out.println("BEFORE");
-		System.out.println(event);
-		System.out.println("AFTER");
+		Event ioEvent = io.trigger(clock);
 
+		if (ioEvent != null) {
+			eventQueue.insertEvent(ioEvent);
+		}
 	}
 
 	/**

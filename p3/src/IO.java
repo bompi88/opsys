@@ -31,8 +31,28 @@ public class IO {
         return null;
     }
 
-    public long getRandomIoTime() {
-        return avgIoTime;
+    /**
+     * Neste prosess bruker IO hvis det er prosesser i køen.
+     * @param clock	current time
+     */
+    public Event runNextProcess(long clock) {
+        // Hvis vi har en kø må neste prosess få lov til å gå bruke IO,
+        // hvis ikke lar vi prosessen fortsette å kjøre.
+        if (!ioQueue.isEmpty()) {
+
+            // hent neste prosess
+            currentIoProcess = ioQueue.removeNext();
+            currentIoProcess.entersIO(clock);
+            gui.setIoActive(currentIoProcess);
+
+            // Send event til når IO er ferdig
+            return new Event(Constants.END_IO, clock + getRandomIoTime());
+        } else {
+            currentIoProcess = null;
+            gui.setIoActive(null);
+        }
+
+        return null;
     }
 
     public Event endIoProcess(long clock) {
@@ -49,4 +69,22 @@ public class IO {
         currentIoProcess = null;
         return cpu.trigger(clock);
     }
+
+    /**
+     * Trigger ny prosess til å bruke IO hvis ingen prosess bruker IO allerede.
+     * @param clock	current time
+     */
+    public Event trigger(long clock) {
+        // Hvis vi ikke har en kjørende prosess, kjør en ny prosess.
+        if (currentIoProcess == null) {
+            return runNextProcess(clock);
+        }
+
+        return null;
+    }
+
+    public long getRandomIoTime() {
+        return avgIoTime;
+    }
+
 }

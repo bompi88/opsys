@@ -57,11 +57,12 @@ public class CPU {
         // Hvis vi har en kø må nest prosess få lov til å gå inn i CPU'en,
         // hvis ikke lar vi prosessen fortsette å kjøre.
         if (!cpuQueue.isEmpty()) {
-            System.out.println("INSIDE");
+
             // hent neste prosess
             activeProcess = cpuQueue.removeNext();
+            activeProcess.entersCpu(clock);
             gui.setCpuActive(activeProcess);
-            System.out.println("Process: " + activeProcess);
+
             // Kjør den nye prosessen og returner den genererte eventen
             return run(activeProcess, clock);
         } else {
@@ -102,7 +103,7 @@ public class CPU {
      * @param clock	current time
      */
     public Event endProcess(long clock) {
-        activeProcess.leftCpu(clock);
+        //activeProcess.leftCpu(clock);
         activeProcess.updateStatistics(statistics);
 
         memory.processCompleted(activeProcess);
