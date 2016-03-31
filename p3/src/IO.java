@@ -90,5 +90,18 @@ public class IO {
     public long getRandomIoTime() {
         return avgIoTime;
     }
+    
+    /**
+	 * This method is called when a discrete amount of time has passed. 
+	 * Use this method to track how long processes have been waiting in the queue.
+	 * @param timePassed	The amount of time that has passed since the last call to this method.
+	 */
+	public void timePassed(long timePassed) {
+		statistics.ioQueueLengthTime += ioQueue.getQueueLength()*timePassed;
+		if (ioQueue.getQueueLength() > statistics.ioQueueLargestLength) {
+			statistics.ioQueueLargestLength = ioQueue.getQueueLength();
+		}
+
+	}
 
 }
