@@ -128,7 +128,7 @@ public class Process implements Constants
 	 * @param clock The time when the process leaves the cpu.
 	 */
 	public void leftCpu(long clock) {
-		timeSpentInReadyQueue += clock - timeOfLastEvent;
+//		timeSpentInReadyQueue += clock - timeOfLastEvent;
 		
 		long lastTimeSpended = clock - timeOfLastEvent;
 		timeSpentInCpu += lastTimeSpended;
@@ -165,7 +165,7 @@ public class Process implements Constants
 	 * @param clock The time when the process leaves the IO.
 	 */
 	public void leftIO(long clock) {
-		timeSpentWaitingForIo += clock - timeOfLastEvent;
+//		timeSpentWaitingForIo += clock - timeOfLastEvent;
 		
 		timeSpentInIo += clock - timeOfLastEvent;
 		timeOfLastEvent = clock;

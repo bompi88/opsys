@@ -67,11 +67,7 @@ public class IO {
 
         // Putt prosessen i CPU-køen igjen
         cpu.insert(oldProcess, clock);
-
         currentIoProcess = null;
-        
-        statistics.nofProcessedIoOperations++;
-
         return cpu.trigger(clock);
         
     }
