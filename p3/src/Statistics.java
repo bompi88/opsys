@@ -80,8 +80,9 @@ public class Statistics
         System.out.println("Fraction of CPU time spent processing: " +
                 ((float)100*totalCpuTimeProcessing / simulationLength + "%"));
         System.out.println("Total CPU time spent waiting: " + (simulationLength - totalCpuTimeProcessing));
-        System.out.println("Fraction of CPU time spent waiting: " +
-                (100-((float)100*totalCpuTimeProcessing/simulationLength))+"%");
+
+        System.out.println("Fraction of CPU time spent waiting: " + 
+                (float)(100-((float)100*totalCpuTimeProcessing/simulationLength))+"%");
 
 
         System.out.println();
