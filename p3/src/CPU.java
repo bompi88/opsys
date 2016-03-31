@@ -94,6 +94,8 @@ public class CPU {
             return runNextProcess(clock);
         }
 
+        System.out.println("SOMETHING IS WRONG");
+        System.out.println(activeProcess);
         return null;
     }
 

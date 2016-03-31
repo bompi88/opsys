@@ -212,12 +212,15 @@ public class Simulator implements Constants
 		Event event = io.insert(currentProcess, clock);
 
 		// Kjør ny prosess i køen
-		cpu.runNextProcess(clock);
+		Event cpuEvent = cpu.runNextProcess(clock);
 
 		currentProcess.leftCpu(clock);
 
 		// Send event til når IO er ferdig prosessert.
         eventQueue.insertEvent(event);
+
+		// Send event til når neste prosess er ferdig.
+		eventQueue.insertEvent(cpuEvent);
 	}
 
 	/**
@@ -226,13 +229,12 @@ public class Simulator implements Constants
 	 */
 	private void endIoOperation() {
 		Event event = io.endIoProcess(clock);
-
 		if (event != null) {
 			eventQueue.insertEvent(event);
 		}
 
 		System.out.println("BEFORE");
-		System.out.println(eventQueue);
+		System.out.println(event);
 		System.out.println("AFTER");
 
 	}
